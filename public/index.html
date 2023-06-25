@@ -26,10 +26,6 @@
     <div class="row">
         <div class="col">
             <ul id="myMessages" class="mt-2">
-                <li>Hola</li>
-                <li>Beto</li>
-                <li>es</li>
-                <li>hoy</li>
             </ul>
         </div>
     </div>
@@ -37,20 +33,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.0/socket.io.js" integrity="sha512-+sXUwEYakGznuXubXLO/7LWSAPcm+U3NxMJaSu3S5OcvruAAAzaC50Uh4TW9KWj0hA6vfPAjB7E1uuIXgn9vmQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script>
-        // Connection with socket server
         const socket = io('http://localhost:8080');
 
-        //References
         const form     = document.querySelector('#myForm');
         const messages = document.querySelector('#myMessages');
+        const message  = document.querySelector('#messageTxt');
         
-        // // Para emitir
-        // socket.emit('message-to-server', { msg: 'Hello server' });
-        
-        // // Para escuchar
-        // socket.on('message-from-server', (data) => {
-        //     console.log(data);
-        // });
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); //Avoid form propagation
+            const newMessage = message.value;
+            socket.emit('message-to-server', { text: newMessage })
+        });
+
+        socket.on('message-from-server', (data) => {
+            messages.innerHTML += `<li>${ data.text }</li>`
+        });
 
     </script>
 </body>
